@@ -1,23 +1,24 @@
 <template>
 <div>
 <search
-	:arrBooks = "jsonBooks"
-	@showBook = "showBooks"
+	:arrList = "jsonBooks"
+	@show = "showBooks"
 />
 <div class="wrapper">
 <table class="table table-bordered">
   <thead>
     <tr>
-	  <th scope="col">Книга</th>
+	  <th scope="col">Книги</th>
 	  <th scope="col">Автор</th>
-	  <th scope="col">Номер</th>
+	  <th scope="col">Цена</th>
+	  <th scope="col">Общая цена: {{sumCurrency}}</th>
     </tr>
   </thead>
   <tbody>
-  	<tr >
-	  <td>{{nameBook}}</td>
-	  <td>{{authorBook}}</td>
-	  <td>{{numberBook}}</td>
+	<tr v-for="(book, index) in filteredBooks" :key="index">
+	  <td>{{book.name}}</td>
+	  <td>{{book.location}}</td>
+	  <td>{{book.currency}}</td>
 	</tr>
   </tbody>
 </table>
@@ -31,22 +32,30 @@
 	export default {
 		data() {
 			return {
-				search: "",
-				filteredBooks:[],
-				jsonBooks: jsonBooks,
-				nameBook: "",
-				authorBook:"",
-				numberBook:""
+				jsonBooks,
+				filteredBooks:jsonBooks
 			}
 		},
 		methods: {
-			showBooks(book) {
-				console.log(book);
-				this.nameBook = book.name;
-				this.authorBook = book.location;
-				this.numberBook = book.currency;
+			showBooks(books) {
+				this.filteredBooks = books;
             }
-		},			
+		},
+		computed: {
+			sumCurrency() {
+				let sum = 0,
+				filteredBooks = this.filteredBooks;
+
+				for (const key in filteredBooks) {
+					if (filteredBooks.hasOwnProperty(key)) {
+						const element = filteredBooks[key];
+						sum += element.currency;
+					}
+				}
+
+				return sum;
+			}
+		},
 		components: {
 			Search
 		}

@@ -1,10 +1,10 @@
 <template>
 <div class="wrapper">
     <label class="label-search">
-        Найти книгу
-        <input type="text" v-model="search" class="form-control input-search" v-on:input="sortbooks">
+        Найти
+        <input type="text" v-on:keyup.enter="show" v-model="search" class="form-control input-search">
         <div v-show="showLivesearch" class="livesearch">
-            <a class="livesearch__links" @click="showBooks(book, index)" :key="index" v-for="(book, index) in filteredBooks">{{book.name}}</a>
+            <a class="livesearch__links" :key="index" v-for="(list, index) in sortList">{{list.name}}</a>
         </div>
     </label>
 </div>
@@ -12,21 +12,25 @@
 
 <script>
 	export default {
-		props: ["arrBooks"],
+		props: ["arrList"],
 		data(){
 			return {
-               search:"" ,
-               filteredBooks:[],
+               search:"",
+               filteredList:[],
                showLivesearch: false
 			}
-		},
-		methods: {
-            sortbooks() {
-                this.showLivesearch = this.search.length != 0 ? true : false;
-                this.filteredBooks = this.arrBooks.filter(book => book.name.toLowerCase().indexOf(this.search.toLowerCase()) !== -1);
+        },
+        computed: {
+            sortList() {
+                this.showLivesearch = this.search.length > 1 ? true : false;
+                this.filteredList = this.arrList.filter(list => list.name.toLowerCase().indexOf(this.search.toLowerCase()) !== -1);
+
+                return this.filteredList;
             },
-            showBooks(book) {
-                this.$emit("showBook", book);
+        },
+		methods: {
+            show() {
+                this.$emit("show", this.filteredList);
                 this.showLivesearch = false;
             }
         },
@@ -44,7 +48,5 @@
     .livesearch__links {
         display: block;
     }
-    .livesearch__links:hover {
-        background: #495057;
-    }
+    
 </style>
