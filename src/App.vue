@@ -43,14 +43,10 @@
 		},
 		computed: {
 			sumCurrency() {
-				let sum = 0,
-				filteredBooks = this.filteredBooks;
-
-				for (const key in filteredBooks) {
-					if (filteredBooks.hasOwnProperty(key)) {
-						const element = filteredBooks[key];
-						sum += element.currency;
-					}
+				let sum = 0;
+				
+				for (let book of this.filteredBooks) {
+					sum += book.currency;
 				}
 
 				return sum;
