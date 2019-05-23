@@ -1,66 +1,73 @@
 <template>
-<div>
-<search
-	:arrList = "jsonBooks"
-	@show = "showBooks"
-/>
-<div class="wrapper">
-<table class="table table-bordered">
-  <thead>
-    <tr>
-	  <th scope="col">Книги</th>
-	  <th scope="col">Автор</th>
-	  <th scope="col">Цена</th>
-	  <th scope="col">Общая цена: {{sumCurrency}}</th>
-    </tr>
-  </thead>
-  <tbody>
-	<tr v-for="(book, index) in filteredBooks" :key="index">
-	  <td>{{book.name}}</td>
-	  <td>{{book.location}}</td>
-	  <td>{{book.currency}}</td>
-	</tr>
-  </tbody>
-</table>
-</div>
-</div>
+	<div class="container video-bg">
+		<div class="video-bg">
+    <video width="100%" height="auto" preload="auto" autoplay="autoplay"
+    loop="loop" >
+        <source src="./components/video.mp4" type="video/mp4"></source>
+    </video>
+		</div>
+		<search-random-film/>
+		<information-film/>
+	</div>
+	
 </template>
 <script>
-	import Search from './components/Search';
-	import jsonBooks from "../Json/test.json";
+	import SearchRandomFilm from './components/SearchRandomFilm';
+	import InformationFilm from './components/InformationFilm';
 
 	export default {
 		data() {
 			return {
-				jsonBooks,
-				filteredBooks:jsonBooks
+				
 			}
 		},
+		created() {
+      
+    //  
+  },
 		methods: {
-			showBooks(books) {
-				this.filteredBooks = books;
-            }
+			
 		},
 		computed: {
-			sumCurrency() {
-				let sum = 0;
-				
-				for (let book of this.filteredBooks) {
-					sum += book.currency;
-				}
-
-				return sum;
-			}
+			
 		},
 		components: {
-			Search
+			SearchRandomFilm,
+			InformationFilm
 		}
 	}
 </script>
 
 <style scope>
-	.wrapper {
-		width:940px;
-		margin:auto;
-	}
+	.video-bg {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: -1;
+		background:  black;
+    background-size: cover;
+}
+
+.video-bg > video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-width: 100%; 
+    min-height: 100%;
+    width: auto;
+    height: auto; 
+}
+
+ @supports (object-fit: cover) {
+     .video-bg > video {
+         top: 0;
+         left: 0;
+         width: 100%;
+         height: 100%;
+         object-fit: cover;
+     }
+ }	
 </style>
