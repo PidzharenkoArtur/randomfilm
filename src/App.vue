@@ -6,13 +6,11 @@
         <source src="./components/video.mp4" type="video/mp4"></source>
     </video>
 		</div>
-		<search-random-film/>
 		<information-film/>
 	</div>
 	
 </template>
 <script>
-	import SearchRandomFilm from './components/SearchRandomFilm';
 	import InformationFilm from './components/InformationFilm';
 
 	export default {
@@ -21,18 +19,7 @@
 				
 			}
 		},
-		created() {
-      
-    //  
-  },
-		methods: {
-			
-		},
-		computed: {
-			
-		},
 		components: {
-			SearchRandomFilm,
 			InformationFilm
 		}
 	}

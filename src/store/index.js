@@ -13,8 +13,10 @@ export const store = new Vuex.Store({
                    country:"",
                    plot:"",
                    poster:""
-                   }
+                   },
+        randomNumber: ""
       },
+        
       mutations: {
         getDataMovie (state, data) {
           state.movieData.title = data.Title;
@@ -23,14 +25,34 @@ export const store = new Vuex.Store({
           state.movieData.imdbRating = data.imdbRating;
           state.movieData.plot = data.Plot; 
           state.movieData.poster = data.Poster;
+        },
+        createIdMovie (state) {
+          let max, min, iter, iterMax, randomNumber;
+
+          iterMax      = 4;
+          iter         = 0;
+          max          = 0;
+          min          = 9;
+          randomNumber = "";
+          
+          while(iter < iterMax) {
+            randomNumber += Math.floor(Math.random() * (max - min)) + min;
+            iter++;  
+          }
+          state.randomNumber = randomNumber;
         }
       },
       actions: {
         getDataMovieAsync(context) {
+          let url;
+
+          context.commit('createIdMovie');
+          url = "http://www.omdbapi.com/?apikey=1fda2e1d&i=tt128"+ context.rootState.randomNumber + "&type=movie";
+          
           axios
-            .get("http://www.omdbapi.com/?apikey=1fda2e1d&i=tt2756032&type=movie")
-            //.get("http://www.omdbapi.com/?apikey=1fda2e1d&s=The One") поиск по слову
+            .get(url)
             .then(response => {
+              
               context.commit('getDataMovie', response.data);
 		  	    });
         }

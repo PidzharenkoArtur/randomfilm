@@ -42,18 +42,20 @@
                
 			}
         },
+        created (){
+            this.showRandomFilm();    
+        },
         computed: {
             ...mapState([
                 'movieData',
+                "randomNumber"
             ])
         },
 		methods: {
             ...mapActions([
-                'getDataMovieAsync'
+                'getDataMovieAsync',
             ]),
-            // ...mapMutations([
-            //     'increment', // `this.increment()` будет вызывать `this.$store.commit('increment')`
-            // ]),
+            
             showRandomFilm() {
                 this.getDataMovieAsync();
             }
