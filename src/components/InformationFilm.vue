@@ -2,25 +2,25 @@
 	<section class="information-film">
 		<div class="row">
 			<div class="col col-md-12">
-				<h1 class="information-film__header">{{movieData.title}}</h1> 
+				<h1 class="information-film__header">{{movieData.Title}}</h1> 
 			</div>
 		</div>
         <div class="row">
             <div class="col col-md-12 information-film__description">
                 <div class="information-film__description-poster">
-                    <img :src='movieData.poster' alt=""/>
+                    <img :src='movieData.Poster' alt=""/>
                 </div>
                 <div class="information-film__characteristic">
                     <p>
-                        Imdb: {{movieData.imdbRating}}
+                        Imdb: {{movieData.ImdbRating}}
                     </p>
                     <p>
-                        Genre: {{movieData.genre}}
+                        Genre: {{movieData.Genre}}
                     </p>
                     <p>
-                        Country: {{movieData.country}}
+                        Country: {{movieData.Country}}
                     </p>
-                    <p class="information-film__text">{{movieData.plot}}</p>  
+                    <p class="information-film__text">{{movieData.Plot}}</p>  
                 </div>
             </div>    
         </div>
@@ -47,17 +47,33 @@
         },
         computed: {
             ...mapState([
-                'movieData',
-                "randomNumber"
+                'movieData'
             ])
         },
 		methods: {
             ...mapActions([
                 'getDataMovieAsync',
             ]),
-            
+
+            getRandomFilm () {
+                let max, min, iter, iterMax, randomNumber;
+
+                iterMax      = 4;
+                iter         = 0;
+                max          = 0;
+                min          = 9;
+                randomNumber = "";
+          
+                while(iter < iterMax) {
+                    randomNumber += Math.floor(Math.random() * (max - min)) + min;
+                    iter++;  
+                }
+
+                return "&i=tt128" + randomNumber + "&type=movie";
+            },
+      
             showRandomFilm() {
-                this.getDataMovieAsync();
+                this.getDataMovieAsync(this.getRandomFilm());
             }
 		}
     }	

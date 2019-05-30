@@ -6,51 +6,32 @@ Vue.use(Vuex);
 
 export const store = new Vuex.Store({
 	    state: {
+        baseUrl: "https://www.omdbapi.com/?",
+        apiKey: "apikey=1fda2e1d",
         movieData: {
-                   title:"",
-                   imdbRating:"",
-                   genre:"",
-                   country:"",
-                   plot:"",
-                   poster:""
+                   Title:"",
+                   ImdbRating:"",
+                   Genre:"",
+                   Country:"",
+                   Plot:"",
+                   Poster:""
                    },
-        randomNumber: ""
       },
         
       mutations: {
         getDataMovie (state, data) {
-          state.movieData.title = data.Title;
-          state.movieData.genre = data.Genre;
-          state.movieData.country = data.Country;
-          state.movieData.imdbRating = data.imdbRating;
-          state.movieData.plot = data.Plot; 
-          state.movieData.poster = data.Poster;
+          state.movieData.Title      = data.Title;
+          state.movieData.Genre      = data.Genre;
+          state.movieData.Country    = data.Country;
+          state.movieData.ImdbRating = data.imdbRating;
+          state.movieData.Plot       = data.Plot; 
+          state.movieData.Poster     = data.Poster;
         },
-        createIdMovie (state) {
-          let max, min, iter, iterMax, randomNumber;
-
-          iterMax      = 4;
-          iter         = 0;
-          max          = 0;
-          min          = 9;
-          randomNumber = "";
-          
-          while(iter < iterMax) {
-            randomNumber += Math.floor(Math.random() * (max - min)) + min;
-            iter++;  
-          }
-          state.randomNumber = randomNumber;
-        }
       },
       actions: {
-        getDataMovieAsync(context) {
-          let url;
-
-          context.commit('createIdMovie');
-          url = "http://www.omdbapi.com/?apikey=1fda2e1d&i=tt128"+ context.rootState.randomNumber + "&type=movie";
-          
+        getDataMovieAsync(context, parameters) {
           axios
-            .get(url)
+            .get(context.rootState.baseUrl + context.rootState.apiKey + parameters)
             .then(response => {
               
               context.commit('getDataMovie', response.data);
