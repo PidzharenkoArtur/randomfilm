@@ -1,13 +1,14 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
+import config from '../../config';
 
 Vue.use(Vuex);
 
 export const store = new Vuex.Store({
 	    state: {
-        baseUrl: "https://www.omdbapi.com/?",
-        apiKey: "apikey=1fda2e1d",
+        baseUrl: config.baseUrl,
+        apiKey:  config.apiKey,
         movieData: {
                    Title:"",
                    ImdbRating:"",
@@ -16,6 +17,7 @@ export const store = new Vuex.Store({
                    Plot:"",
                    Poster:""
                    },
+        look: false
       },
         
       mutations: {
@@ -27,14 +29,19 @@ export const store = new Vuex.Store({
           state.movieData.Plot       = data.Plot; 
           state.movieData.Poster     = data.Poster;
         },
+        isLook (state) {
+          state.look = false;
+        }
       },
       actions: {
         getDataMovieAsync(context, parameters) {
           axios
-            .get(context.rootState.baseUrl + context.rootState.apiKey + parameters)
+            .get(context.rootState.baseUrl + "?apikey=" + context.rootState.apiKey + parameters)
             .then(response => {
-              
-              context.commit('getDataMovie', response.data);
+              setTimeout(()=> {
+                context.commit('getDataMovie', response.data);
+                context.rootState.look = true;
+              }, 1000);
 		  	    });
         }
       }

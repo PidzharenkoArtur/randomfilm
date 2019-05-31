@@ -6,6 +6,7 @@
         <source src="./components/video.mp4" type="video/mp4"></source>
     </video>
 		</div>
+        
 		<information-film/>
 	</div>
 	
@@ -34,7 +35,7 @@
     left: 0;
     overflow: hidden;
     z-index: -1;
-		background:  black;
+	background:  black;
     background-size: cover;
 }
 

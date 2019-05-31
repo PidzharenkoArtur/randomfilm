@@ -1,5 +1,6 @@
 <template>
-	<section class="information-film">
+    <div>
+	<section v-if="look" class="information-film">
 		<div class="row">
 			<div class="col col-md-12">
 				<h1 class="information-film__header">{{movieData.Title}}</h1> 
@@ -17,6 +18,7 @@
                     <p>
                         Genre: {{movieData.Genre}}
                     </p>
+                    {{isPreloader}}
                     <p>
                         Country: {{movieData.Country}}
                     </p>
@@ -27,7 +29,11 @@
 		<div class="row">
 			<button type="submit" @click="showRandomFilm" class="btn btn-primary search-film__button">Another movie</button>
 		</div>
-	</section>	
+	</section>
+    <section v-if="!look" class="preloader">
+        <p class="preloader__text">DOWNLOAD</p>
+    </section>
+    </div>
 </template>
 
 <script>
@@ -39,23 +45,34 @@
 		props: [],
 		data() {
 			return {
-               
+                isPreloader: true,
 			}
         },
-        created (){
+        updated() {
+           this.changeStatePreloader(false);
+           console.log(this.isPreloader);
+        },
+        created () {
             this.showRandomFilm();    
         },
         computed: {
             ...mapState([
-                'movieData'
+                'movieData',
+                'look'
             ])
         },
 		methods: {
+            ...mapMutations([
+               'isLook'
+            ]),
+
             ...mapActions([
                 'getDataMovieAsync',
             ]),
-
-            getRandomFilm () {
+            changeStatePreloader (state) {
+                this.isPreloader = state;  
+            },
+            getFilm () {
                 let max, min, iter, iterMax, randomNumber;
 
                 iterMax      = 4;
@@ -73,7 +90,10 @@
             },
       
             showRandomFilm() {
-                this.getDataMovieAsync(this.getRandomFilm());
+                this.changeStatePreloader(true);
+                this.isLook();
+                
+                this.getDataMovieAsync(this.getFilm())
             }
 		}
     }	
@@ -85,7 +105,7 @@
         margin-bottom: 30px;
         color: white;
     }
-    .information-film {
+    .information-film, .preloader {
 		margin: 0;
     	position: absolute;
     	top: 50%;
@@ -103,6 +123,8 @@
     
     .information-film__description-poster {
         margin-right: 30px;
+        width: 250px;
+        border: 1px solid white;
     }
     .information-film__characteristic {
         margin-left: 30px;
@@ -118,7 +140,7 @@
     .search-film__button:hover{
 		border:2px solid #007bff!important;
 	}
-	.search-film__button {
+	.search-film__button, .preloader__text {
 		background: 0!important;
 		color: white!important;
 		width: 300px!important;
@@ -128,4 +150,8 @@
 		margin: 0 auto;
 		font-size: 25px!important;
 	}
+
+    .preloader__text {
+       border: 0px solid white!important;
+    }
 </style>
