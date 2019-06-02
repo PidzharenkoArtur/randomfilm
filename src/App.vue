@@ -1,18 +1,14 @@
 <template>
 	<div class="container video-bg">
 		<div class="video-bg">
-    <video width="100%" height="auto" preload="auto" autoplay="autoplay"
-    loop="loop" >
-        <source src="./components/video.mp4" type="video/mp4"></source>
-    </video>
+            <video width="100%" height="auto" preload="auto" autoplay="autoplay" loop="loop" >
+                <source src="./components/video.mp4" type="video/mp4"></source>
+            </video>
 		</div>
-        
-		<information-film/>
+        <router-view/>
 	</div>
-	
 </template>
 <script>
-	import InformationFilm from './components/InformationFilm';
 
 	export default {
 		data() {
@@ -21,7 +17,7 @@
 			}
 		},
 		components: {
-			InformationFilm
+            
 		}
 	}
 </script>

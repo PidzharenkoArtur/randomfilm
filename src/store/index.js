@@ -17,7 +17,9 @@ export const store = new Vuex.Store({
                    Plot:"",
                    Poster:""
                    },
-        look: false
+        look: false,
+        numberFavorites: 0,
+        listFilm: [],
       },
         
       mutations: {
@@ -31,16 +33,45 @@ export const store = new Vuex.Store({
         },
         isLook (state) {
           state.look = false;
+        },
+        setNumberFavorites(state, action) {
+          console.log(state.numberFavorites);
+          if (action === "show") {
+            state.numberFavorites = localStorage.getItem("numberFavorite"); 
+            return;
+          }
+          if (action === "add") {
+            state.numberFavorites++;
+            localStorage.setItem("numberFavorite", state.numberFavorites);    
+          } else {
+            state.numberFavorites--;  
+            localStorage.setItem("numberFavorite", state.numberFavorites);    
+          }
+        },
+        controlListFilm(state, mode) {
+          if (mode === "delete") {
+            state.listFilm = JSON.parse(localStorage.getItem("listFilm")); 
+            return;
+          }
+          if (mode === "download") {
+            state.listFilm = JSON.parse(localStorage.getItem("listFilm")) || [];  
+          } 
+          else {
+            state.listFilm.push(state.movieData);
+            localStorage.setItem('listFilm', JSON.stringify(state.listFilm));
+          
+            state.listFilm = JSON.parse(localStorage.getItem("listFilm"));
+          }
         }
       },
       actions: {
-        getDataMovieAsync(context, parameters) {
+        getFilm({state, commit}, parameters) {
           axios
-            .get(context.rootState.baseUrl + "?apikey=" + context.rootState.apiKey + parameters)
+            .get(state.baseUrl + "?apikey=" + state.apiKey + parameters)
             .then(response => {
               setTimeout(()=> {
-                context.commit('getDataMovie', response.data);
-                context.rootState.look = true;
+                commit('getDataMovie', response.data);
+                state.look = true;
               }, 1000);
 		  	    });
         }

@@ -18,7 +18,6 @@
                     <p>
                         Genre: {{movieData.Genre}}
                     </p>
-                    {{isPreloader}}
                     <p>
                         Country: {{movieData.Country}}
                     </p>
@@ -27,12 +26,19 @@
             </div>    
         </div>
 		<div class="row">
-			<button type="submit" @click="showRandomFilm" class="btn btn-primary search-film__button">Another movie</button>
+            <div class="information-film__buttons">
+                <button type="submit" @click="addFavorites" class="btn btn-primary film__button">+</button>
+			    <button type="submit" @click="showRandomFilm" class="btn btn-primary film__button search-film__button">Another movie</button>
+                <router-link to="/listfavorites">
+                    <button type="submit" @click="goFavorites" class="btn btn-primary film__button go-film__button">-><span>{{numberFavorites}}</span></button>
+                </router-link>
+            </div>
 		</div>
 	</section>
     <section v-if="!look" class="preloader">
         <p class="preloader__text">DOWNLOAD</p>
     </section>
+    
     </div>
 </template>
 
@@ -42,6 +48,7 @@
     import { mapActions } from 'vuex';
 
 	export default {
+        name: 'home',
 		props: [],
 		data() {
 			return {
@@ -50,29 +57,34 @@
         },
         updated() {
            this.changeStatePreloader(false);
-           console.log(this.isPreloader);
         },
         created () {
-            this.showRandomFilm();    
-        },
+            this.controlListFilm("download");
+            this.showRandomFilm();
+            this.setNumberFavorites("show");        
+            },
         computed: {
             ...mapState([
                 'movieData',
-                'look'
+                'look',
+                'numberFavorites',
+                'listFilm'
             ])
         },
 		methods: {
             ...mapMutations([
-               'isLook'
+               'isLook',
+               'setNumberFavorites',
+               'controlListFilm'
             ]),
 
             ...mapActions([
-                'getDataMovieAsync',
+                'getFilm',
             ]),
             changeStatePreloader (state) {
                 this.isPreloader = state;  
             },
-            getFilm () {
+            getRandomFilmId () {
                 let max, min, iter, iterMax, randomNumber;
 
                 iterMax      = 4;
@@ -93,8 +105,18 @@
                 this.changeStatePreloader(true);
                 this.isLook();
                 
-                this.getDataMovieAsync(this.getFilm())
+                this.getFilm(this.getRandomFilmId())
+            },
+
+            addFavorites() {
+                this.setNumberFavorites("add");
+                this.controlListFilm("add");
+            },
+
+            goFavorites() {
+
             }
+
 		}
     }	
 </script>
@@ -135,22 +157,42 @@
         max-width: 400px;
     }
     .information-film__description-poster img {
-        width: 250px;
+        width: 248px;
+        min-height: 335px;
     }
-    .search-film__button:hover{
+    .film__button:hover {
 		border:2px solid #007bff!important;
 	}
-	.search-film__button, .preloader__text {
+	.film__button, .preloader__text {
 		background: 0!important;
 		color: white!important;
-		width: 300px!important;
 		text-transform: uppercase;
 		text-align: center;
 		border: 2px solid white!important;
 		margin: 0 auto;
 		font-size: 25px!important;
 	}
-
+    .information-film__buttons {
+        display: flex;
+        width: 530px;
+        margin: 0 auto;
+    }  
+    .search-film__button {
+        width: 300px!important;
+    } 
+    .go-film__button {
+        position: relative;
+    }
+    .go-film__button span {
+        display: block;
+        position: absolute;
+        bottom: -12px;
+        right: -11px;
+        font-size: 14px;
+        background-color: #007bff;
+        min-width: 23px;
+        border-radius: 50%;
+    }  
     .preloader__text {
        border: 0px solid white!important;
     }
