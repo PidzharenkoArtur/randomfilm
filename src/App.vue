@@ -16,9 +16,6 @@
 				
 			}
 		},
-		components: {
-            
-		}
 	}
 </script>
 

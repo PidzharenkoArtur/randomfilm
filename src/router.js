@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 import InformationFilm from './components/InformationFilm'
 import ListFavorites from './components/ListFavorites'
+import FavoriteFilm from './components/FavoriteFilm'
 
 Vue.use(Router)
 
@@ -19,7 +20,11 @@ export default new Router({
         name: 'listfavorites',
         component: ListFavorites,
     },
-    
+    {
+      path: '/favoriteFilm/:id',
+      name: 'FavoriteFilm',
+      component: FavoriteFilm,
+  },
   ],
   mode: 'history'
 })

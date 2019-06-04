@@ -27,8 +27,8 @@
         </div>
 		<div class="row">
             <div class="information-film__buttons">
-                <button type="submit" @click="addFavorites" class="btn btn-primary film__button">+</button>
-			    <button type="submit" @click="showRandomFilm" class="btn btn-primary film__button search-film__button">Another movie</button>
+                <button type="submit" @click="deleteItem(indexListFilm)" class="btn btn-primary film__button">-</button>
+			    <!-- <button type="submit" @click="showRandomFilm" class="btn btn-primary film__button search-film__button">Another movie</button> -->
                 <router-link to="/listfavorites">
                     <button type="submit" @click="goFavorites" class="btn btn-primary film__button go-film__button">-><span>{{numberFavorites}}</span></button>
                 </router-link>
@@ -60,7 +60,7 @@
         },
         created () {
             this.controlListFilm("download");
-            this.showRandomFilm();
+            this.showFilm();
             this.setNumberFavorites("show");        
             },
         computed: {
@@ -68,51 +68,33 @@
                 'movieData',
                 'look',
                 'numberFavorites',
-                'listFilm'
+                'listFilm',
+                'indexListFilm'
             ])
         },
 		methods: {
             ...mapMutations([
                'isLook',
                'setNumberFavorites',
-               'controlListFilm'
+               'controlListFilm',
             ]),
 
-            ...mapActions([
-                'getFilm',
-            ]),
             changeStatePreloader (state) {
                 this.isPreloader = state;  
             },
-            getRandomFilmId () {
-                let max, min, iter, iterMax, randomNumber;
 
-                iterMax      = 4;
-                iter         = 0;
-                max          = 0;
-                min          = 9;
-                randomNumber = "";
-          
-                while(iter < iterMax) {
-                    randomNumber += Math.floor(Math.random() * (max - min)) + min;
-                    iter++;  
-                }
-
-                return "&i=tt128" + randomNumber;
-            },
-      
-            showRandomFilm() {
+            showFilm() {
                 this.changeStatePreloader(true);
                 this.isLook();
-                
-                this.getFilm(this.getRandomFilmId());
             },
+            deleteItem(index) {
+               this.controlListFilm('delete');
+               this.listFilm.splice(index, 1);
 
-            addFavorites() {
-                this.setNumberFavorites("add");
-                this.controlListFilm("add");
+               localStorage.setItem('listFilm', JSON.stringify(this.listFilm));
+
+               this.setNumberFavorites(); 
             },
-
             goFavorites() {
 
             }

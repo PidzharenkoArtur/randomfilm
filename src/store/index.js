@@ -15,11 +15,13 @@ export const store = new Vuex.Store({
                    Genre:"",
                    Country:"",
                    Plot:"",
-                   Poster:""
+                   Poster:"",
+                   imdbID:""
                    },
         look: false,
         numberFavorites: 0,
         listFilm: [],
+        indexListFilm: 0
       },
         
       mutations: {
@@ -30,12 +32,15 @@ export const store = new Vuex.Store({
           state.movieData.ImdbRating = data.imdbRating;
           state.movieData.Plot       = data.Plot; 
           state.movieData.Poster     = data.Poster;
+          state.movieData.imdbID     = data.imdbID;
         },
         isLook (state) {
           state.look = false;
         },
+        setIndexListFilm (state, index) {
+          state.indexListFilm = index;
+        },
         setNumberFavorites(state, action) {
-          console.log(state.numberFavorites);
           if (action === "show") {
             state.numberFavorites = localStorage.getItem("numberFavorite"); 
             return;
