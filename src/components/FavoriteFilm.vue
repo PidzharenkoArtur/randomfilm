@@ -26,12 +26,19 @@
             </div>    
         </div>
 		<div class="row">
-            <div class="information-film__buttons">
-                <button type="submit" @click="deleteItem(indexListFilm)" class="btn btn-primary film__button">-</button>
-			    <!-- <button type="submit" @click="showRandomFilm" class="btn btn-primary film__button search-film__button">Another movie</button> -->
+            <div class="favorite__buttons">
                 <router-link to="/listfavorites">
-                    <button type="submit" @click="goFavorites" class="btn btn-primary film__button go-film__button">-><span>{{numberFavorites}}</span></button>
+                    <button type="submit" @click="deleteItem(indexListFilm)" class="btn btn-primary film__button" width="27px">-</button>
                 </router-link>
+                <router-link to="/listfavorites">
+                    <button type="submit" class="btn btn-primary film__button go-film__button">-><span>{{numberFavorites}}</span></button>
+                </router-link>
+                <figure class="rating">
+                    <figcaption class="rating__caption">your rating:</figcaption>
+                    <ul class="rating__list">
+                        <li v-for="item in 5" class="rating__item" :class="[( (item -1) === indexRating ) ? 'rating__item--active' : '']" @click="putRating(item-1)" :key="item">{{item}}</li>
+                    </ul>
+                </figure>
             </div>
 		</div>
 	</section>
@@ -49,10 +56,11 @@
 
 	export default {
         name: 'home',
-		props: [],
 		data() {
 			return {
                 isPreloader: true,
+                isActive: false,
+                indexRating: -1
 			}
         },
         updated() {
@@ -61,7 +69,9 @@
         created () {
             this.controlListFilm("download");
             this.showFilm();
-            this.setNumberFavorites("show");        
+            this.setNumberFavorites("show");
+            
+            this.indexRating = JSON.parse(localStorage.getItem("listFilm"))[this.indexListFilm].yourRating - 1;
             },
         computed: {
             ...mapState([
@@ -78,7 +88,9 @@
                'setNumberFavorites',
                'controlListFilm',
             ]),
-
+            ...mapActions([
+               'getFilm'
+            ]),
             changeStatePreloader (state) {
                 this.isPreloader = state;  
             },
@@ -86,6 +98,7 @@
             showFilm() {
                 this.changeStatePreloader(true);
                 this.isLook();
+                this.getFilm("&i=" + document.location.pathname.replace('/favoriteFilm/', ''));
             },
             deleteItem(index) {
                this.controlListFilm('delete');
@@ -95,10 +108,11 @@
 
                this.setNumberFavorites(); 
             },
-            goFavorites() {
-
-            }
-
+            putRating(index) {
+                this.indexRating = index;
+                this.listFilm[this.indexListFilm].yourRating = this.indexRating + 1;
+                localStorage.setItem('listFilm', JSON.stringify(this.listFilm));
+            },
 		}
     }	
 </script>
@@ -154,14 +168,12 @@
 		margin: 0 auto;
 		font-size: 25px!important;
 	}
-    .information-film__buttons {
+    .favorite__buttons {
         display: flex;
-        width: 530px;
+        width: 400px;
         margin: 0 auto;
+        justify-content: space-around;
     }  
-    .search-film__button {
-        width: 300px!important;
-    } 
     .go-film__button {
         position: relative;
     }
@@ -177,5 +189,32 @@
     }  
     .preloader__text {
        border: 0px solid white!important;
+    }
+    .rating__list {
+        list-style: none;
+        margin-left: 0;
+        padding-left: 0;
+    }
+    .rating__caption {
+        color: white;
+    }
+    .rating__item {
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        border: 1px solid white;
+        display: inline-block;
+        margin-right: 5px;
+        color: white;
+        font-size: 12px;
+        text-align: center;
+        cursor: pointer;
+    }
+    .rating__item:hover {
+        border-color: #007bff;
+    }
+    .rating__item--active{
+        background: #007bff;
+        border-color: #007bff;
     }
 </style>

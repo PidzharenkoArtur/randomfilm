@@ -5,9 +5,9 @@
                 <li class="list-group-item list-favorites__item" v-for='(list, index) in listFilm' v-bind:key="index">
                     <span class="list-favorites__name">Title:</span> {{list.Title}}
                     <span class="list-favorites__name">Imdb:</span> {{list.ImdbRating}}
-                    <span class="list-favorites__name">Rating:</span> {{1}}
+                    <span class="list-favorites__name">Rating:</span> {{list.yourRating}}
                     <router-link :to='"/favoriteFilm/" + list.imdbID'>
-                        <button @click="showFilm(list.imdbID, index)" class="btn btn-primary film__button list-favorites__show">-></button>
+                        <button @click="saveIndexFilm(index)" class="btn btn-primary film__button list-favorites__show">-></button>
                     </router-link>
                     <button @click="deleteItem(index)" class="btn btn-primary film__button list-favorites__close">x</button>
                 </li>
@@ -34,6 +34,9 @@
                 'movieData',    
             ]),
         },
+        created() {
+          this.controlListFilm("download");
+        },
         mounted() {
             this.getListMovies();
         },
@@ -42,9 +45,6 @@
                 'controlListFilm',
                 'setNumberFavorites',
                 'setIndexListFilm'
-            ]),
-            ...mapActions([
-                'getFilm',
             ]),
             deleteItem(index) {
                this.controlListFilm('delete');
@@ -57,8 +57,7 @@
             getListMovies() {
                 this.listFilm = JSON.parse(localStorage.getItem("listFilm"));
             },
-            showFilm(id, index) {
-                this.getFilm("&i=" + id);
+            saveIndexFilm(index) {
                 this.setIndexListFilm(index);
             }
 		}
