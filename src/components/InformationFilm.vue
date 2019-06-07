@@ -29,7 +29,7 @@
             <div class="information-film__buttons">
                 <button type="submit" @click="addFavorites" class="btn btn-primary film__button">+</button>
 			    <button type="submit" @click="showRandomFilm" class="btn btn-primary film__button search-film__button">Another movie</button>
-                <router-link to="/listfavorites">
+                <router-link :to="{ name: 'favorites'}">
                     <button type="submit" @click="goFavorites" class="btn btn-primary film__button go-film__button">-><span>{{numberFavorites}}</span></button>
                 </router-link>
             </div>

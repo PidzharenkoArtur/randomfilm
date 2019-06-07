@@ -27,10 +27,10 @@
         </div>
 		<div class="row">
             <div class="favorite__buttons">
-                <router-link to="/listfavorites">
+                <router-link :to="{ name: 'favorites'}">
                     <button type="submit" @click="deleteItem(indexListFilm)" class="btn btn-primary film__button" width="27px">-</button>
                 </router-link>
-                <router-link to="/listfavorites">
+                <router-link :to="{ name: 'favorites'}">
                     <button type="submit" class="btn btn-primary film__button go-film__button">-><span>{{numberFavorites}}</span></button>
                 </router-link>
                 <figure class="rating">

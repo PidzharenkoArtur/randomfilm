@@ -6,7 +6,7 @@
                     <span class="list-favorites__name">Title:</span> {{list.Title}}
                     <span class="list-favorites__name">Imdb:</span> {{list.ImdbRating}}
                     <span class="list-favorites__name">Rating:</span> {{list.yourRating}}
-                    <router-link :to='"/favoriteFilm/" + list.imdbID'>
+                    <router-link :to="{ name: 'favoriteFilm', params: { id: list.imdbID }}">
                         <button @click="saveIndexFilm(index)" class="btn btn-primary film__button list-favorites__show">-></button>
                     </router-link>
                     <button @click="deleteItem(index)" class="btn btn-primary film__button list-favorites__close">x</button>
@@ -25,20 +25,18 @@
 		props: [],
 		data() {
 			return {
-                listFilm: null
+                listMovies: null
 			}
         },
         
         computed: {
             ...mapState([
-                'movieData',    
+                'movieData',
+                'listFilm'    
             ]),
         },
         created() {
           this.controlListFilm("download");
-        },
-        mounted() {
-            this.getListMovies();
         },
 		methods: {
             ...mapMutations([
@@ -53,9 +51,6 @@
                localStorage.setItem('listFilm', JSON.stringify(this.listFilm));
 
                this.setNumberFavorites(); 
-            },
-            getListMovies() {
-                this.listFilm = JSON.parse(localStorage.getItem("listFilm"));
             },
             saveIndexFilm(index) {
                 this.setIndexListFilm(index);

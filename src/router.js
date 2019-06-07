@@ -16,13 +16,13 @@ export default new Router({
         
     },
     {
-        path: '/listfavorites',
-        name: 'listfavorites',
+        path: '/favorites',
+        name: 'favorites',
         component: ListFavorites,
     },
     {
       path: '/favoriteFilm/:id',
-      name: 'FavoriteFilm',
+      name: 'favoriteFilm',
       component: FavoriteFilm,
   },
   ],

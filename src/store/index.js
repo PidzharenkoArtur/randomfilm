@@ -17,7 +17,7 @@ export const store = new Vuex.Store({
                    Plot:"",
                    Poster:"",
                    imdbID:"",
-                   yourRating:0
+                   
                    },
         look: false,
         numberFavorites: 0,
@@ -55,12 +55,15 @@ export const store = new Vuex.Store({
           }
         },
         controlListFilm(state, mode) {
+          
           if (mode === "delete") {
             state.listFilm = JSON.parse(localStorage.getItem("listFilm")); 
             return;
           }
           if (mode === "download") {
+            
             state.listFilm = JSON.parse(localStorage.getItem("listFilm")) || [];
+            console.log(state.listFilm);
           } 
           else {
             state.listFilm.push(state.movieData);
