@@ -52,11 +52,7 @@
 		props: [],
 		data() {
 			return {
-                isPreloader: true,
 			}
-        },
-        updated() {
-           this.changeStatePreloader(false);
         },
         created () {
             this.controlListFilm("download");
@@ -81,9 +77,6 @@
             ...mapActions([
                 'getFilm',
             ]),
-            changeStatePreloader (state) {
-                this.isPreloader = state;  
-            },
             getRandomFilmId () {
                 let max, min, iter, iterMax, randomNumber;
 
@@ -102,7 +95,6 @@
             },
       
             showRandomFilm() {
-                this.changeStatePreloader(true);
                 this.isLook();
                 
                 this.getFilm(this.getRandomFilmId());

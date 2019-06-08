@@ -35,9 +35,10 @@
                 </router-link>
                 <figure class="rating">
                     <figcaption class="rating__caption">your rating:</figcaption>
-                    <ul class="rating__list">
-                        <li v-for="item in 5" class="rating__item" :class="[( (item -1) === indexRating ) ? 'rating__item--active' : '']" @click="putRating(item-1)" :key="item">{{item}}</li>
-                    </ul>
+                    <div class="rating__list">
+                        <input :id="'r' + item" type="radio" v-model="rating" :value="item" v-for="item in 5"  @click="saveFilmRating(item-1)" :key="item"/>
+                        <label v-for="item in 5" :for="'r' + item" :key="'r' + item" class="rating__item" :class="[( (item -1) === indexRating ) ? 'rating__item--active' : '']">{{item}}</label>
+                    </div>
                 </figure>
             </div>
 		</div>
@@ -58,13 +59,9 @@
         name: 'home',
 		data() {
 			return {
-                isPreloader: true,
-                isActive: false,
+                rating:"",
                 indexRating: -1
 			}
-        },
-        updated() {
-           this.changeStatePreloader(false);
         },
         created () {
             this.controlListFilm("download");
@@ -80,7 +77,10 @@
                 'numberFavorites',
                 'listFilm',
                 'indexListFilm'
-            ])
+            ]),
+            getFilmId() {
+                return "&i=" + this.$route.params.id;
+            }
         },
 		methods: {
             ...mapMutations([
@@ -91,14 +91,9 @@
             ...mapActions([
                'getFilm'
             ]),
-            changeStatePreloader (state) {
-                this.isPreloader = state;  
-            },
-
             showFilm() {
-                this.changeStatePreloader(true);
                 this.isLook();
-                this.getFilm("&i=" + document.location.pathname.replace('/favoriteFilm/', ''));
+                this.getFilm(this.getFilmId);
             },
             deleteItem(index) {
                this.controlListFilm('delete');
@@ -108,11 +103,11 @@
 
                this.setNumberFavorites(); 
             },
-            putRating(index) {
+            saveFilmRating(index) {
                 this.indexRating = index;
                 this.listFilm[this.indexListFilm].yourRating = this.indexRating + 1;
                 localStorage.setItem('listFilm', JSON.stringify(this.listFilm));
-            },
+            }
 		}
     }	
 </script>
@@ -216,5 +211,9 @@
     .rating__item--active{
         background: #007bff;
         border-color: #007bff;
+    }
+    input[type=radio] {
+        visibility: hidden;
+        position: absolute;
     }
 </style>

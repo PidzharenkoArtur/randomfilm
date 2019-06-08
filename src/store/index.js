@@ -61,9 +61,7 @@ export const store = new Vuex.Store({
             return;
           }
           if (mode === "download") {
-            
             state.listFilm = JSON.parse(localStorage.getItem("listFilm")) || [];
-            console.log(state.listFilm);
           } 
           else {
             state.listFilm.push(state.movieData);
