@@ -5,7 +5,7 @@
                 <li class="list-group-item list-favorites__item" v-for='(list, index) in listFilm' v-bind:key="index">
                     <span class="list-favorites__name">Title:</span> {{list.Title}}
                     <span class="list-favorites__name">Imdb:</span> {{list.ImdbRating}}
-                    <span class="list-favorites__name">Rating:</span> {{list.yourRating}}
+                    <span class="list-favorites__name">Rating:</span> - {{list.yourRating}}
                     <router-link :to="{ name: 'favoriteFilm', params: { id: list.imdbID }}">
                         <button @click="saveIndexFilm(index)" class="btn btn-primary film__button list-favorites__show">-></button>
                     </router-link>
@@ -25,7 +25,7 @@
 		props: [],
 		data() {
 			return {
-                listMovies: null
+                listMovies: null,
 			}
         },
         
@@ -36,21 +36,24 @@
             ]),
         },
         created() {
-          this.controlListFilm("download");
+            console.log(this.listFilm)
+          this.controlListFilmDownload();
         },
 		methods: {
             ...mapMutations([
                 'controlListFilm',
-                'setNumberFavorites',
-                'setIndexListFilm'
+                'setNumberFavoritesDelete',
+                'setIndexListFilm',
+                'controlListFilmDelete',
+                'controlListFilmDownload'
             ]),
             deleteItem(index) {
-               this.controlListFilm('delete');
+               this.controlListFilmDelete();
                this.listFilm.splice(index, 1);
 
                localStorage.setItem('listFilm', JSON.stringify(this.listFilm));
 
-               this.setNumberFavorites(); 
+               this.setNumberFavoritesDelete(); 
             },
             saveIndexFilm(index) {
                 this.setIndexListFilm(index);

@@ -1,30 +1,7 @@
 <template>
     <div>
 	<section v-if="look" class="information-film">
-		<div class="row">
-			<div class="col col-md-12">
-				<h1 class="information-film__header">{{movieData.Title}}</h1> 
-			</div>
-		</div>
-        <div class="row">
-            <div class="col col-md-12 information-film__description">
-                <div class="information-film__description-poster">
-                    <img :src='movieData.Poster' alt=""/>
-                </div>
-                <div class="information-film__characteristic">
-                    <p>
-                        Imdb: {{movieData.ImdbRating}}
-                    </p>
-                    <p>
-                        Genre: {{movieData.Genre}}
-                    </p>
-                    <p>
-                        Country: {{movieData.Country}}
-                    </p>
-                    <p class="information-film__text">{{movieData.Plot}}</p>  
-                </div>
-            </div>    
-        </div>
+		<film/>
 		<div class="row">
             <div class="favorite__buttons">
                 <router-link :to="{ name: 'favorites'}">
@@ -55,25 +32,30 @@
     import { mapMutations } from 'vuex';
     import { mapActions } from 'vuex';
 
+    import Film from './Film'
+
 	export default {
         name: 'home',
 		data() {
 			return {
                 rating:"",
-                indexRating: -1
+                indexRating: -1,
+                look: false
 			}
         },
+        components: {
+            Film
+        },
         created () {
-            this.controlListFilm("download");
+            this.controlListFilmDownload();
             this.showFilm();
-            this.setNumberFavorites("show");
+            this.setNumberFavoritesShow();
             
             this.indexRating = JSON.parse(localStorage.getItem("listFilm"))[this.indexListFilm].yourRating - 1;
             },
         computed: {
             ...mapState([
                 'movieData',
-                'look',
                 'numberFavorites',
                 'listFilm',
                 'indexListFilm'
@@ -84,29 +66,37 @@
         },
 		methods: {
             ...mapMutations([
-               'isLook',
-               'setNumberFavorites',
+               'setNumberFavoritesShow',
+               'setNumberFavoritesDelete',
                'controlListFilm',
+               'controlListFilmDelete',
+               'controlListFilmDownload'
             ]),
             ...mapActions([
                'getFilm'
             ]),
             showFilm() {
-                this.isLook();
                 this.getFilm(this.getFilmId);
+
+                setTimeout(()=> {
+                    this.isLook();
+                }, 1000);
             },
             deleteItem(index) {
-               this.controlListFilm('delete');
+               this.controlListFilmDelete();
                this.listFilm.splice(index, 1);
 
                localStorage.setItem('listFilm', JSON.stringify(this.listFilm));
 
-               this.setNumberFavorites(); 
+               this.setNumberFavoritesDelete(); 
             },
             saveFilmRating(index) {
                 this.indexRating = index;
                 this.listFilm[this.indexListFilm].yourRating = this.indexRating + 1;
                 localStorage.setItem('listFilm', JSON.stringify(this.listFilm));
+            },
+            isLook () {
+                this.look = !this.look;
             }
 		}
     }	
@@ -127,17 +117,17 @@
     	transform: translate(-50%, -50%)
 	}
     .information-film__description {
+        width: 840px;
         display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
         margin-bottom: 30px;
         color: white;
     }
     
     .information-film__description-poster {
-        margin-right: 30px;
+        margin-left: 30px;
         width: 250px;
         border: 1px solid white;
+        background: white;
     }
     .information-film__characteristic {
         margin-left: 30px;
@@ -145,7 +135,7 @@
     }
     .information-film__text {
         word-wrap: break-word;
-        max-width: 400px;
+        max-width: 500px;
     }
     .information-film__description-poster img {
         width: 248px;

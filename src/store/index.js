@@ -17,12 +17,11 @@ export const store = new Vuex.Store({
                    Plot:"",
                    Poster:"",
                    imdbID:"",
-                   
                    },
-        look: false,
         numberFavorites: 0,
         listFilm: [],
-        indexListFilm: 0
+        indexListFilm: 0,
+        
       },
         
       mutations: {
@@ -35,41 +34,33 @@ export const store = new Vuex.Store({
           state.movieData.Poster     = data.Poster;
           state.movieData.imdbID     = data.imdbID;
         },
-        isLook (state) {
-          state.look = false;
-        },
+        
         setIndexListFilm (state, index) {
           state.indexListFilm = index;
         },
-        setNumberFavorites(state, action) {
-          if (action === "show") {
+        setNumberFavoritesShow(state) {
             state.numberFavorites = localStorage.getItem("numberFavorite"); 
-            return;
-          }
-          if (action === "add") {
-            state.numberFavorites++;
-            localStorage.setItem("numberFavorite", state.numberFavorites);    
-          } else {
-            state.numberFavorites--;  
-            localStorage.setItem("numberFavorite", state.numberFavorites);    
-          }
         },
-        controlListFilm(state, mode) {
-          
-          if (mode === "delete") {
+        setNumberFavoritesAdd(state) {
+            state.numberFavorites++;
+            localStorage.setItem("numberFavorite", state.numberFavorites); 
+        },
+        setNumberFavoritesDelete(state) {
+            state.numberFavorites--;  
+            localStorage.setItem("numberFavorite", state.numberFavorites);  
+        },
+        controlListFilmDelete(state) {
             state.listFilm = JSON.parse(localStorage.getItem("listFilm")); 
-            return;
-          }
-          if (mode === "download") {
+        },
+        controlListFilmDownload(state) {
             state.listFilm = JSON.parse(localStorage.getItem("listFilm")) || [];
-          } 
-          else {
+        },
+        controlListFilmAdd(state) {
             state.listFilm.push(state.movieData);
             localStorage.setItem('listFilm', JSON.stringify(state.listFilm));
           
             state.listFilm = JSON.parse(localStorage.getItem("listFilm"));
-          }
-        }
+        },
       },
       actions: {
         getFilm({state, commit}, parameters) {
@@ -78,8 +69,7 @@ export const store = new Vuex.Store({
             .then(response => {
               setTimeout(()=> {
                 commit('getDataMovie', response.data);
-                state.look = true;
-              }, 1000);
+              }, 0);
 		  	    });
         }
       }

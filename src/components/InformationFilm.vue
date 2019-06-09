@@ -1,44 +1,20 @@
 <template>
     <div>
-	<section v-if="look" class="information-film">
-		<div class="row">
-			<div class="col col-md-12">
-				<h1 class="information-film__header">{{movieData.Title}}</h1> 
-			</div>
-		</div>
-        <div class="row">
-            <div class="col col-md-12 information-film__description">
-                <div class="information-film__description-poster">
-                    <img :src='movieData.Poster' alt=""/>
-                </div>
-                <div class="information-film__characteristic">
-                    <p>
-                        Imdb: {{movieData.ImdbRating}}
-                    </p>
-                    <p>
-                        Genre: {{movieData.Genre}}
-                    </p>
-                    <p>
-                        Country: {{movieData.Country}}
-                    </p>
-                    <p class="information-film__text">{{movieData.Plot}}</p>  
-                </div>
-            </div>    
-        </div>
-		<div class="row">
+        <section v-if="look" class="information-film">
+            <film/>
+            <div class="row">
             <div class="information-film__buttons">
                 <button type="submit" @click="addFavorites" class="btn btn-primary film__button">+</button>
 			    <button type="submit" @click="showRandomFilm" class="btn btn-primary film__button search-film__button">Another movie</button>
                 <router-link :to="{ name: 'favorites'}">
-                    <button type="submit" @click="goFavorites" class="btn btn-primary film__button go-film__button">-><span>{{numberFavorites}}</span></button>
+                    <button type="submit" class="btn btn-primary film__button go-film__button">-><span>{{numberFavorites}}</span></button>
                 </router-link>
             </div>
 		</div>
-	</section>
-    <section v-if="!look" class="preloader">
-        <p class="preloader__text">DOWNLOAD</p>
-    </section>
-    
+        </section>
+        <section v-if="!look" class="preloader">
+            <p class="preloader__text">DOWNLOAD</p>
+        </section>
     </div>
 </template>
 
@@ -47,31 +23,37 @@
     import { mapMutations } from 'vuex';
     import { mapActions } from 'vuex';
 
+    import Film from './Film'
+
 	export default {
         name: 'home',
 		props: [],
 		data() {
 			return {
+                look:true
 			}
         },
+        components: {
+            Film
+        },
         created () {
-            this.controlListFilm("download");
+            this.controlListFilmDownload();
             this.showRandomFilm();
-            this.setNumberFavorites("show");        
+            this.setNumberFavoritesShow();        
             },
         computed: {
             ...mapState([
-                'movieData',
-                'look',
                 'numberFavorites',
                 'listFilm'
             ])
         },
 		methods: {
             ...mapMutations([
-               'isLook',
+               'setNumberFavoritesShow',
+               'setNumberFavoritesAdd',
                'setNumberFavorites',
-               'controlListFilm'
+               'controlListFilmDownload',
+               'controlListFilmAdd'
             ]),
 
             ...mapActions([
@@ -96,19 +78,20 @@
       
             showRandomFilm() {
                 this.isLook();
-                
                 this.getFilm(this.getRandomFilmId());
+
+                setTimeout(()=> {
+                    this.isLook();
+                }, 1000);
             },
 
             addFavorites() {
-                this.setNumberFavorites("add");
-                this.controlListFilm("add");
+                this.setNumberFavoritesAdd();
+                this.controlListFilmAdd();
             },
-
-            goFavorites() {
-
-            }
-
+            isLook () {
+                this.look = !this.look;
+            },
 		}
     }	
 </script>
@@ -128,17 +111,17 @@
     	transform: translate(-50%, -50%)
 	}
     .information-film__description {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
         margin-bottom: 30px;
         color: white;
     }
     
     .information-film__description-poster {
-        margin-right: 30px;
+        position: relative;
         width: 250px;
         border: 1px solid white;
+        background: white;
+        max-width: 0 auto;
+        
     }
     .information-film__characteristic {
         margin-left: 30px;
@@ -148,9 +131,22 @@
         word-wrap: break-word;
         max-width: 400px;
     }
+    .information-film__description-poster h2 {
+        position: absolute;
+        color: black;
+        top: 50%;
+        left: 50%;
+        margin-right: -50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        z-index: 1;
+        font-size: 20px;
+    }
     .information-film__description-poster img {
+        position: relative;
         width: 248px;
         min-height: 335px;
+        z-index: 2;
     }
     .film__button:hover {
 		border:2px solid #007bff!important;
